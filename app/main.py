@@ -1,8 +1,8 @@
 from fastapi import FastAPI, UploadFile
 import os
-from . import config, processing
+from . import config, processing, chords
 
-app = FastAPI(title="reLooper.ai API")
+app = FastAPI(title="reLooper.ai - AI Powered")
 
 @app.post("/upload/")
 async def upload(file: UploadFile):
@@ -11,6 +11,7 @@ async def upload(file: UploadFile):
     processing.save_uploaded_file(file_content, filepath)
 
     wav_path = processing.convert_to_wav(filepath)
-    chords = processing.detect_chords(wav_path)
+    notes = processing.run_basicpitch(wav_path)
+    estimated_chords = chords.estimate_chords(notes)
 
-    return {"chords": chords}
+    return {"chords": estimated_chords}
