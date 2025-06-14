@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydub
+librosa
+madmom
+numpy
+scipy
+python-multipart
