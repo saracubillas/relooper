@@ -9,8 +9,6 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 
 
-RUN git clone https://github.com/spotify/basic-pitch.git
-RUN pip install ./basic-pitch
 
 RUN pip install --no-cache-dir -r requirements.txt
 

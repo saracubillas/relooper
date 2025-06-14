@@ -1,6 +1,6 @@
 from pydub import AudioSegment
-import os
 import numpy as np
+import os
 from basic_pitch.inference import predict
 
 # Save uploaded file
@@ -22,5 +22,6 @@ def convert_to_wav(input_path):
 
 def run_basicpitch(wav_path):
     model_output, _, _ = predict(wav_path)
-    notes = model_output['note_event']
+    print("Model output:", model_output)
+    notes = model_output['note']
     return notes  # columns: [start_time, end_time, pitch (MIDI), confidence]
