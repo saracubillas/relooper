@@ -3,6 +3,8 @@ import os
 from . import config, processing, chords
 from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI(title="reLooper.ai - AI Powered")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -11,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app = FastAPI(title="reLooper.ai - AI Powered")
+
 
 @app.post("/upload/")
 async def upload(file: UploadFile):
