@@ -2,14 +2,12 @@ from pydub import AudioSegment
 import numpy as np
 import os
 from basic_pitch.inference import predict
+from basic_pitch import ICASSP_2022_MODEL_PATH
 
-# Save uploaded file
 
 def save_uploaded_file(file, destination):
     with open(destination, "wb") as buffer:
         buffer.write(file)
-
-# Convert any input audio to WAV mono 22050Hz for model compatibility
 
 def convert_to_wav(input_path):
     audio = AudioSegment.from_file(input_path)
@@ -21,7 +19,17 @@ def convert_to_wav(input_path):
 
 
 def run_basicpitch(wav_path):
-    model_output, _, _ = predict(wav_path)
-    print("Model output:", model_output)
-    notes = model_output['note']
-    return notes  # columns: [start_time, end_time, pitch (MIDI), confidence]
+    model_output, midi_data, note_events = predict(wav_path)
+    #note_events = (start_time, end_time, midi_note, confidence, activation)
+
+    notes = np.array([(s, e, p, c) for (s, e, p, c, a) in note_events]) # Strip activations
+
+    print(f"Detected {len(notes)} notes before filtering")
+
+    # Apply confidence filter
+    notes = notes[notes[:, 3] > 0.6]
+
+    print(f"Detected {len(notes)} notes after filtering")
+    print("Notes (start, end, pitch, confidence):")
+    print(notes)
+    return notes
