@@ -12,6 +12,7 @@ function App() {
     const [loop, setLoop] = useState(true);
     const regions = RegionsPlugin.create();
     let activeRegion = null;
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!wavesurfer || chords.length === 0) return;
@@ -29,7 +30,7 @@ function App() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('file', file);
         const res = await axios.post('http://localhost:8000/upload/', formData);
@@ -72,12 +73,19 @@ function App() {
             ws.play();
             activeRegion = null;
         });
+        setIsLoading(false);
     };
 
     return (
         <div className="App" style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
             <h1 style={{ textAlign: 'center' }}>🎵 reLooper.ai 🎵</h1>
-            <input type="file" onChange={handleFileChange} style={{ margin: '10px 0', width: '100%' }} />
+            <input type="file" onChange={handleFileChange} disabled={isLoading} style={{ margin: '10px 0', width: '100%' }} />
+
+            {isLoading && (
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    🎵 Analyzing song... Please wait...
+                </div>
+            )}
             <div ref={waveformRef} style={{ width: '100%', height: '200px', marginBottom: '20px' }}></div>
 
             {wavesurfer && (
