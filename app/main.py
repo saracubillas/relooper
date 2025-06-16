@@ -7,7 +7,10 @@ app = FastAPI(title="reLooper.ai - AI Powered")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",  # dev
+        "https://looper.relooper.ai"  # prod
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
