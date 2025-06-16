@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile
 import os
 from . import config, processing, chords
 from fastapi.middleware.cors import CORSMiddleware
+import logging
 
 app = FastAPI(title="reLooper.ai - AI Powered")
 
@@ -9,7 +10,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # dev
-        "https://looper.relooper.ai"  # prod
+        "https://looper.relooper.ai"  # frontend production
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -17,6 +18,13 @@ app.add_middleware(
 )
 
 
+
+@app.middleware("http")
+async def log_origin(request, call_next):
+    origin = request.headers.get("origin")
+    logging.info(f"Origin: {origin}")
+    response = await call_next(request)
+    return response
 
 @app.post("/upload/")
 async def upload(file: UploadFile):
