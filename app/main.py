@@ -12,7 +12,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # dev
-        "https://looper.relooper.ai"  # frontend production
+        "https://looper.relooper.ai", # frontend production
+        "https://looper.relooper.ai/"  # frontend production
     ],
     allow_credentials=True,
     allow_methods=["*"],
