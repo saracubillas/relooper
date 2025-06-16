@@ -31,6 +31,7 @@ async def log_origin(request, call_next):
 
 @app.post("/upload/")
 async def upload(file: UploadFile):
+    print("🚀 File received!")
     filepath = os.path.join(config.UPLOAD_FOLDER, file.filename)
     file_content = await file.read()
     processing.save_uploaded_file(file_content, filepath)
@@ -38,5 +39,5 @@ async def upload(file: UploadFile):
     wav_path = processing.convert_to_wav(filepath)
     notes = processing.run_basicpitch(wav_path)
     estimated_chords = chords.estimate_chords(notes)
-
+    print("✅ Successfully processed file")
     return {"chords": estimated_chords}
